@@ -65,6 +65,8 @@ coverage.xml
 local_settings.py
 db.sqlite3
 staticfiles/
+recommend/medicine_records.pkl
+recommend/medicine_neighbors.pkl
 
 # Flask stuff:
 instance/

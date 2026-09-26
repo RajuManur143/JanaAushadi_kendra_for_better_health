@@ -2,7 +2,7 @@
 
 ## Deploy the Django website on Render
 
-The repository's website is a Django app that renders its pages and handles its forms. The Render Blueprint at the repository root creates the web service and PostgreSQL database together.
+The repository contains a Django website and a separate Streamlit medicine recommender. The Render Blueprint at the repository root creates both web services and a PostgreSQL database.
 
 1. Push these changes to the GitHub repository.
 2. In Render, choose **New +** then **Blueprint** and connect `RajuManur143/JanaAushadi_kendra_for_better_health`.
@@ -18,4 +18,4 @@ The contact form also needs `DJANGO_EMAIL_TESTING_ACCOUNT_NAME` and `DJANGO_EMAI
 
 There is no separate JavaScript frontend in this repository: the browser pages are Django templates, coupled to Django routes and forms. Deploying only those templates to Vercel would break those interactions. The working deployment for the existing app is therefore the complete Django site on Render. A Vercel frontend would require a separate frontend project and API integration.
 
-The `recommend/` directory is a separate Streamlit prototype, not connected to the Django routes. Its `app.py` loads `similarity.pkl`, but that file is not present in the repository, so it cannot be deployed as-is.
+The recommender build step generates compact top-five medicine matches from `recommend/medicine.csv` instead of storing the original dense similarity matrix, which would exceed a free instance's memory.

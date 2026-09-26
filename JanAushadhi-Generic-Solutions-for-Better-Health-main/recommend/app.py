@@ -3,27 +3,28 @@ import pickle
 import pandas as pd
 from PIL import Image
 import urllib.parse
+from pathlib import Path
+
+APP_DIR = Path(__file__).resolve().parent
 
 # Load CSS for styling
-with open('css/style.css') as f:
+with open(APP_DIR / 'css' / 'style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# Loading medicine-dataframe from pickle
-medicines_dict = pickle.load(open('medicine_dict.pkl', 'rb'))
+with (APP_DIR / 'medicine_records.pkl').open('rb') as medicine_file:
+    medicines_dict = pickle.load(medicine_file)
 medicines = pd.DataFrame(medicines_dict)
 
-# Loading similarity-vector-data from pickle
-similarity = pickle.load(open('similarity.pkl', 'rb'))
+with (APP_DIR / 'medicine_neighbors.pkl').open('rb') as neighbors_file:
+    medicine_neighbors = pickle.load(neighbors_file)
 
 def recommend(medicine):
-    medicine_index = medicines[medicines['Drug_Name'] == medicine].index[0]
-    distances = similarity[medicine_index]
-    medicines_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
-    
-    recommended_medicines = []
-    for i in medicines_list:
-        recommended_medicines.append(medicines.iloc[i[0]].Drug_Name)
-    return recommended_medicines
+    matches = medicines.index[medicines['Drug_Name'] == medicine]
+    if matches.empty:
+        return []
+
+    neighbor_indices = medicine_neighbors[int(matches[0])]
+    return medicines.iloc[neighbor_indices]['Drug_Name'].tolist()
 
 # Title
 st.markdown('<h1 style="font-size: 38.5px;" class="stTitle">JanAushadhi Medicine Recommender</h1>', unsafe_allow_html=True)
@@ -50,5 +51,5 @@ if st.button('Recommend Medicine', key='recommend', help="Click to get recommend
         """, unsafe_allow_html=True)
 
 # Image load
-image = Image.open('images/bg.webp')
+image = Image.open(APP_DIR / 'images' / 'bg.webp')
 st.image(image, caption='Recommended Medicines', use_column_width=True)

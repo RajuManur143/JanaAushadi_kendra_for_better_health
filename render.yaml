@@ -21,3 +21,10 @@ services:
         generateValue: true
       - key: DEBUG
         value: 'False'
+  - type: web
+    name: janaushadhi-recommender
+    runtime: python
+    plan: free
+    rootDir: JanAushadhi-Generic-Solutions-for-Better-Health-main
+    buildCommand: pip install -r requirements-recommender.txt && python recommend/build_model.py
+    startCommand: cd recommend && streamlit run app.py --server.address 0.0.0.0 --server.port $PORT --server.headless true
