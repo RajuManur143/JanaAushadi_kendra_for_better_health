@@ -111,5 +111,7 @@ This project is the result of collaborative efforts from the following team memb
 - Special thanks to [JanAushadhi Portal](https://janaushadhi.gov.in/) for providing the information of JanAushadhi Kendras and Generic Medicines.
 - We would like to acknowledge the inspiration and guidance from various online resources and tutorials.
 
-#### Live Demo: https://janaushadhi-generic-solutions-for-better.onrender.com
+#### Live Demo: https://janaushadhi-web.onrender.com
+
+#### Medicine Recommender: https://janaushadhi-recommender.onrender.com
 
