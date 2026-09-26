@@ -52,4 +52,4 @@ if st.button('Recommend Medicine', key='recommend', help="Click to get recommend
 
 # Image load
 image = Image.open(APP_DIR / 'images' / 'bg.webp')
-st.image(image, caption='Recommended Medicines', use_column_width=True)
+st.image(image, caption='Recommended Medicines', use_container_width=True)
