@@ -250,59 +250,45 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Define the districts for each state
-        var districts = {
-            "ANDAMAN AND NICOBAR ISLANDS": ["Nicobars", "North and Middle Andaman", "South Andamans"],
-            "ANDHRA PRADESH": ["Visakhapatnam", "Vijayawada", "Guntur"],
-            "ARUNACHAL PRADESH": ["Itanagar", "Tawang", "Bomdila"],
-            "ASSAM": ["Guwahati", "Dibrugarh", "Jorhat"],
-            "BIHAR": ["Patna", "Gaya", "Bhagalpur"],
-            "CHANDIGARH": ["Chandigarh"],
-            "CHHATTISGARH": ["Raipur", "Bilaspur", "Durg"],
-            "DELHI": ["New Delhi"],
-            "GOA": ["North Goa", "South Goa"],
-            "GUJARAT": ["Ahmedabad", "Surat", "Vadodara"],
-            "HARYANA": ["Gurugram", "Faridabad", "Ambala"],
-            "HIMACHAL PRADESH": ["Shimla", "Dharamshala"],
-            "JAMMU AND KASHMIR": ["Srinagar", "Jammu"],
-            "JHARKHAND": ["Ranchi", "Jamshedpur"],
-            "KARNATAKA": ["Bengaluru", "Mysuru"],
-            "KERALA": ["Kochi", "Thiruvananthapuram"],
-            "LADAKH": ["Leh"],
-            "LAKSHADWEEP": ["Kavaratti"],
-            "MADHYA PRADESH": ["Bhopal", "Indore"],
-            "MAHARASHTRA": ["Mumbai Suburban", "Mumbai City", "Thane", "Pune", "Nagpur"],
-            "MANIPUR": ["Imphal"],
-            "MEGHALAYA": ["Shillong"],
-            "MIZORAM": ["Aizawl"],
-            "NAGALAND": ["Kohima"],
-            "ODISHA": ["Bhubaneswar", "Cuttack"],
-            "PUDUCHERRY": ["Puducherry"],
-            "PUNJAB": ["Chandigarh", "Ludhiana"],
-            "RAJASTHAN": ["Jaipur", "Udaipur"],
-            "SIKKIM": ["Gangtok"],
-            "TAMIL NADU": ["Chennai", "Coimbatore"],
-            "TELANGANA": ["Hyderabad"],
-            "THE DADRA AND NAGAR HAVELI AND DAMAN AND DIU": ["Daman"],
-            "TRIPURA": ["Agartala"],
-            "UTTAR PRADESH": ["Lucknow", "Kanpur"],
-            "UTTARAKHAND": ["Dehradun"],
-            "WEST BENGAL": ["Kolkata", "Siliguri"]
-        };
-
-        // Populate district dropdown based on selected state
         $('#ddlState').change(function () {
             var state = $(this).val();
             var $ddlDistrict = $('#ddlDistrict');
             $ddlDistrict.empty();
-            if (state && districts[state]) {
-                $ddlDistrict.append('<option value="">--Select District--</option>');
-                $.each(districts[state], function (index, value) {
-                    $ddlDistrict.append('<option value="' + value + '">' + value + '</option>');
-                });
-            } else {
-                $ddlDistrict.append('<option value="">--Select District--</option>');
+
+            $('#storeList').empty();
+            $ddlDistrict.append($('<option>', { value: '', text: '--Select District--' }));
+            if (!state) {
+                return;
             }
+
+            $ddlDistrict.prop('disabled', true);
+            $.getJSON('{% url 'get_districts' %}', { state: state })
+                .done(function (response) {
+                    var districts = response.districts || [];
+                    if (districts.length === 0) {
+                        $ddlDistrict.append($('<option>', {
+                            value: '',
+                            text: 'No stores listed for this state'
+                        }));
+                        return;
+                    }
+
+                    $.each(districts, function (index, district) {
+                        $ddlDistrict.append($('<option>', {
+                            value: district,
+                            text: district
+                        }));
+                    });
+                })
+                .fail(function () {
+                    $ddlDistrict.append($('<option>', {
+                        value: '',
+                        text: 'Could not load districts'
+                    }));
+                })
+                .always(function () {
+                    $ddlDistrict.prop('disabled', false);
+                });
         });
 
         // Handle store list button click
@@ -332,7 +318,7 @@
                                 'border-collapse': 'collapse' /* Ensure borders collapse */
                             });
 
-                            var thead = $('<thead><tr><th>Store Code</th><th>State</th><th>District</th><th>Address</th><th>Pincode</th><th>Contact</th></tr></thead>');
+                            var thead = $('<thead><tr><th>Store Name</th><th>State</th><th>District</th><th>Address</th><th>Pincode</th><th>Contact</th></tr></thead>');
                             var tbody = $('<tbody></tbody>');
 
                             table.append(thead);

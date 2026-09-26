@@ -8,7 +8,7 @@ The repository contains a Django website and a separate Streamlit medicine recom
 2. In Render, choose **New +** then **Blueprint** and connect `RajuManur143/JanaAushadi_kendra_for_better_health`.
 3. Select the `main` branch and apply the Blueprint. Render builds and deploys the service; the generated `onrender.com` address is shown in the dashboard.
 4. After the first deploy, open the service's Shell and run `python manage.py createsuperuser` to add the first admin user.
-5. Sign in at `/admin/` and add the store and medicine records. The repository has migrations but no Django database fixture, so a new database starts without these records.
+5. Sign in at `/admin/` and add or update records. A migration seeds the six featured Maharashtra stores shown on the site; the repository has no broader official store dataset or medicine catalog fixture.
 
 The settings read `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, and `DATABASE_URL` from the environment. Render generates the production secret and supplies the database URL and host. Do not reuse the Django secret that was committed in the old settings file; it should be treated as exposed.
 
